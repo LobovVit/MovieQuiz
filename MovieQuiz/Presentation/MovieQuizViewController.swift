@@ -8,49 +8,55 @@ final class MovieQuizViewController: UIViewController {
       let text: String
       let buttonText: String
     }
+    
     private struct QuizStepViewModel {
       let image: UIImage
       let question: String
       let questionNumber: String
     }
+    
     private struct QuizQuestion {
       let image: String
       let text: String
       let correctAnswer: Bool
     }
     
-    private var questions: [QuizQuestion] = [QuizQuestion.init(image: "The Godfather", 
-                                                               text: "Рейтинг этого фильма больше чем 6?",
-                                                               correctAnswer: true),
-                                             QuizQuestion.init(image: "The Dark Knight", 
-                                                               text: "Рейтинг этого фильма больше чем 6?",
-                                                               correctAnswer: true),
-                                             QuizQuestion.init(image: "Kill Bill", 
-                                                               text: "Рейтинг этого фильма больше чем 6?",
-                                                               correctAnswer: true),
-                                             QuizQuestion.init(image: "The Avengers", 
-                                                               text: "Рейтинг этого фильма больше чем 6?",
-                                                               correctAnswer: true),
-                                             QuizQuestion.init(image: "Deadpool", 
-                                                               text: "Рейтинг этого фильма больше чем 6?",
-                                                               correctAnswer: true),
-                                             QuizQuestion.init(image: "The Green Knight", 
-                                                               text: "Рейтинг этого фильма больше чем 6?",
-                                                               correctAnswer: true),
-                                             QuizQuestion.init(image: "Old", 
-                                                               text: "Рейтинг этого фильма больше чем 6?",
-                                                               correctAnswer: false),
-                                             QuizQuestion.init(image: "The Ice Age Adventures of Buck Wild", 
-                                                               text: "Рейтинг этого фильма больше чем 6?",
-                                                               correctAnswer: false),
-                                             QuizQuestion.init(image: "Tesla", 
-                                                               text: "Рейтинг этого фильма больше чем 6?",
-                                                               correctAnswer: false),
-                                             QuizQuestion.init(image: "Vivarium", 
-                                                               text: "Рейтинг этого фильма больше чем 6?",
-                                                               correctAnswer: false)]
+    private var questions: [QuizQuestion] = [
+             QuizQuestion(image: "The Godfather",
+                               text: "Рейтинг этого фильма больше чем 6?",
+                               correctAnswer: true),
+             QuizQuestion(image: "The Dark Knight",
+                               text: "Рейтинг этого фильма больше чем 6?",
+                               correctAnswer: true),
+             QuizQuestion(image: "Kill Bill",
+                               text: "Рейтинг этого фильма больше чем 6?",
+                               correctAnswer: true),
+             QuizQuestion(image: "The Avengers",
+                               text: "Рейтинг этого фильма больше чем 6?",
+                               correctAnswer: true),
+             QuizQuestion(image: "Deadpool",
+                               text: "Рейтинг этого фильма больше чем 6?",
+                               correctAnswer: true),
+             QuizQuestion(image: "The Green Knight",
+                               text: "Рейтинг этого фильма больше чем 6?",
+                               correctAnswer: true),
+             QuizQuestion(image: "Old",
+                               text: "Рейтинг этого фильма больше чем 6?",
+                               correctAnswer: false),
+             QuizQuestion(image: "The Ice Age Adventures of Buck Wild",
+                               text: "Рейтинг этого фильма больше чем 6?",
+                               correctAnswer: false),
+             QuizQuestion(image: "Tesla",
+                               text: "Рейтинг этого фильма больше чем 6?",
+                               correctAnswer: false),
+             QuizQuestion(image: "Vivarium",
+                               text: "Рейтинг этого фильма больше чем 6?",
+                               correctAnswer: false),
+    ]
+    
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
+    
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
@@ -68,9 +74,9 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        return QuizStepViewModel.init(image: UIImage(named: model.image) ?? UIImage(), 
-                                      question: model.text,
-                                      questionNumber: "\(currentQuestionIndex+1)/\(questions.count)")
+        QuizStepViewModel(image: UIImage(named: model.image) ?? UIImage(),
+                          question: model.text,
+                          questionNumber: "\(currentQuestionIndex+1)/\(questions.count)")
     }
     
     private func show(quiz step: QuizStepViewModel) {
@@ -79,6 +85,7 @@ final class MovieQuizViewController: UIViewController {
         counterLabel.text = step.questionNumber
         imageView.layer.borderColor = UIColor.ypBackground.cgColor
     }
+    
     private func show(quiz result: QuizResultsViewModel) {
         let alert = UIAlertController(
             title: result.title,
@@ -110,14 +117,13 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showNextQuestionOrResults(inc : Bool) {
+        if inc { correctAnswers += 1 }
         if currentQuestionIndex == questions.count - 1 {
-            if inc {correctAnswers += 1}
             show(quiz: QuizResultsViewModel(title: "Этот раунд окончен!",
                                             text: "Ваш результат: \(correctAnswers) из \(questions.count)",
                                             buttonText: "Сыграть ещё раз"))
         } else {
             currentQuestionIndex += 1
-            if inc {correctAnswers += 1}
             show(quiz: convert(model: questions[currentQuestionIndex]))
         }
     }
