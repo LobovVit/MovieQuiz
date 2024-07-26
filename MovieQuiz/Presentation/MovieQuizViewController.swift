@@ -57,6 +57,8 @@ final class MovieQuizViewController: UIViewController {
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
     
+    @IBOutlet private weak var yesButton: UIButton!
+    @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
@@ -112,6 +114,8 @@ final class MovieQuizViewController: UIViewController {
         } else {
             imageView.layer.borderColor = UIColor.ypRed.cgColor
         }
+        yesButton.isEnabled = false
+        noButton.isEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults(inc: inc)
         }
@@ -119,6 +123,8 @@ final class MovieQuizViewController: UIViewController {
     
     private func showNextQuestionOrResults(inc : Bool) {
         if inc { correctAnswers += 1 }
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
         if currentQuestionIndex == questions.count - 1 {
             show(quiz: QuizResultsViewModel(title: "Этот раунд окончен!",
                                             text: "Ваш результат: \(correctAnswers) из \(questions.count)",
@@ -127,5 +133,6 @@ final class MovieQuizViewController: UIViewController {
             currentQuestionIndex += 1
             show(quiz: convert(model: questions[currentQuestionIndex]))
         }
+        
     }
 }
