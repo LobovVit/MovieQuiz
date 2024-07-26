@@ -107,22 +107,20 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.cornerRadius = 20
-        var inc: Bool = false
         if isCorrect {
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
-            inc = true
+            correctAnswers += 1
         } else {
             imageView.layer.borderColor = UIColor.ypRed.cgColor
         }
         yesButton.isEnabled = false
         noButton.isEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.showNextQuestionOrResults(inc: inc)
+            self.showNextQuestionOrResults()
         }
     }
     
-    private func showNextQuestionOrResults(inc : Bool) {
-        if inc { correctAnswers += 1 }
+    private func showNextQuestionOrResults() {
         yesButton.isEnabled = true
         noButton.isEnabled = true
         if currentQuestionIndex == questions.count - 1 {
