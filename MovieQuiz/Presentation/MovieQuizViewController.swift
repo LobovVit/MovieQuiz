@@ -23,35 +23,35 @@ final class MovieQuizViewController: UIViewController {
     
     private var questions: [QuizQuestion] = [
              QuizQuestion(image: "The Godfather",
-                               text: "Рейтинг этого фильма больше чем 6?",
-                               correctAnswer: true),
+                          text: "Рейтинг этого фильма больше чем 6?",
+                          correctAnswer: true),
              QuizQuestion(image: "The Dark Knight",
-                               text: "Рейтинг этого фильма больше чем 6?",
-                               correctAnswer: true),
+                          text: "Рейтинг этого фильма больше чем 6?",
+                          correctAnswer: true),
              QuizQuestion(image: "Kill Bill",
-                               text: "Рейтинг этого фильма больше чем 6?",
-                               correctAnswer: true),
+                          text: "Рейтинг этого фильма больше чем 6?",
+                          correctAnswer: true),
              QuizQuestion(image: "The Avengers",
-                               text: "Рейтинг этого фильма больше чем 6?",
-                               correctAnswer: true),
+                          text: "Рейтинг этого фильма больше чем 6?",
+                          correctAnswer: true),
              QuizQuestion(image: "Deadpool",
-                               text: "Рейтинг этого фильма больше чем 6?",
-                               correctAnswer: true),
+                          text: "Рейтинг этого фильма больше чем 6?",
+                          correctAnswer: true),
              QuizQuestion(image: "The Green Knight",
-                               text: "Рейтинг этого фильма больше чем 6?",
-                               correctAnswer: true),
+                          text: "Рейтинг этого фильма больше чем 6?",
+                          correctAnswer: true),
              QuizQuestion(image: "Old",
-                               text: "Рейтинг этого фильма больше чем 6?",
-                               correctAnswer: false),
+                          text: "Рейтинг этого фильма больше чем 6?",
+                          correctAnswer: false),
              QuizQuestion(image: "The Ice Age Adventures of Buck Wild",
-                               text: "Рейтинг этого фильма больше чем 6?",
-                               correctAnswer: false),
+                          text: "Рейтинг этого фильма больше чем 6?",
+                          correctAnswer: false),
              QuizQuestion(image: "Tesla",
-                               text: "Рейтинг этого фильма больше чем 6?",
-                               correctAnswer: false),
+                          text: "Рейтинг этого фильма больше чем 6?",
+                          correctAnswer: false),
              QuizQuestion(image: "Vivarium",
-                               text: "Рейтинг этого фильма больше чем 6?",
-                               correctAnswer: false),
+                          text: "Рейтинг этого фильма больше чем 6?",
+                          correctAnswer: false),
     ]
     
     private var currentQuestionIndex = 0
@@ -69,6 +69,7 @@ final class MovieQuizViewController: UIViewController {
     @IBAction private func noButtonClicked(_ sender: Any) {
         showAnswerResult(isCorrect: !questions[currentQuestionIndex].correctAnswer)
     }
+    
     @IBAction private func yesButtonClicked(_ sender: Any) {
         showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer)
     }
