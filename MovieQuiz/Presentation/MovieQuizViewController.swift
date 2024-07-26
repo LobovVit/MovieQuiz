@@ -4,59 +4,61 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     
     private struct QuizResultsViewModel {
-      let title: String
-      let text: String
-      let buttonText: String
+        let title: String
+        let text: String
+        let buttonText: String
     }
     
     private struct QuizStepViewModel {
-      let image: UIImage
-      let question: String
-      let questionNumber: String
+        let image: UIImage
+        let question: String
+        let questionNumber: String
     }
     
     private struct QuizQuestion {
-      let image: String
-      let text: String
-      let correctAnswer: Bool
+        let image: String
+        let text: String
+        let correctAnswer: Bool
     }
     
     private var questions: [QuizQuestion] = [
-             QuizQuestion(image: "The Godfather",
-                          text: "Рейтинг этого фильма больше чем 6?",
-                          correctAnswer: true),
-             QuizQuestion(image: "The Dark Knight",
-                          text: "Рейтинг этого фильма больше чем 6?",
-                          correctAnswer: true),
-             QuizQuestion(image: "Kill Bill",
-                          text: "Рейтинг этого фильма больше чем 6?",
-                          correctAnswer: true),
-             QuizQuestion(image: "The Avengers",
-                          text: "Рейтинг этого фильма больше чем 6?",
-                          correctAnswer: true),
-             QuizQuestion(image: "Deadpool",
-                          text: "Рейтинг этого фильма больше чем 6?",
-                          correctAnswer: true),
-             QuizQuestion(image: "The Green Knight",
-                          text: "Рейтинг этого фильма больше чем 6?",
-                          correctAnswer: true),
-             QuizQuestion(image: "Old",
-                          text: "Рейтинг этого фильма больше чем 6?",
-                          correctAnswer: false),
-             QuizQuestion(image: "The Ice Age Adventures of Buck Wild",
-                          text: "Рейтинг этого фильма больше чем 6?",
-                          correctAnswer: false),
-             QuizQuestion(image: "Tesla",
-                          text: "Рейтинг этого фильма больше чем 6?",
-                          correctAnswer: false),
-             QuizQuestion(image: "Vivarium",
-                          text: "Рейтинг этого фильма больше чем 6?",
-                          correctAnswer: false),
+        QuizQuestion(image: "The Godfather",
+                     text: "Рейтинг этого фильма больше чем 6?",
+                     correctAnswer: true),
+        QuizQuestion(image: "The Dark Knight",
+                     text: "Рейтинг этого фильма больше чем 6?",
+                     correctAnswer: true),
+        QuizQuestion(image: "Kill Bill",
+                     text: "Рейтинг этого фильма больше чем 6?",
+                     correctAnswer: true),
+        QuizQuestion(image: "The Avengers",
+                     text: "Рейтинг этого фильма больше чем 6?",
+                     correctAnswer: true),
+        QuizQuestion(image: "Deadpool",
+                     text: "Рейтинг этого фильма больше чем 6?",
+                     correctAnswer: true),
+        QuizQuestion(image: "The Green Knight",
+                     text: "Рейтинг этого фильма больше чем 6?",
+                     correctAnswer: true),
+        QuizQuestion(image: "Old",
+                     text: "Рейтинг этого фильма больше чем 6?",
+                     correctAnswer: false),
+        QuizQuestion(image: "The Ice Age Adventures of Buck Wild",
+                     text: "Рейтинг этого фильма больше чем 6?",
+                     correctAnswer: false),
+        QuizQuestion(image: "Tesla",
+                     text: "Рейтинг этого фильма больше чем 6?",
+                     correctAnswer: false),
+        QuizQuestion(image: "Vivarium",
+                     text: "Рейтинг этого фильма больше чем 6?",
+                     correctAnswer: false),
     ]
     
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
     
+    @IBOutlet private weak var yesButton: UIButton!
+    @IBOutlet private weak var noButton: UIButton!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
@@ -112,6 +114,8 @@ final class MovieQuizViewController: UIViewController {
         } else {
             imageView.layer.borderColor = UIColor.ypRed.cgColor
         }
+        yesButton.isEnabled = false
+        noButton.isEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults(inc: inc)
         }
@@ -119,6 +123,8 @@ final class MovieQuizViewController: UIViewController {
     
     private func showNextQuestionOrResults(inc : Bool) {
         if inc { correctAnswers += 1 }
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
         if currentQuestionIndex == questions.count - 1 {
             show(quiz: QuizResultsViewModel(title: "Этот раунд окончен!",
                                             text: "Ваш результат: \(correctAnswers) из \(questions.count)",
@@ -127,5 +133,6 @@ final class MovieQuizViewController: UIViewController {
             currentQuestionIndex += 1
             show(quiz: convert(model: questions[currentQuestionIndex]))
         }
+        
     }
 }
