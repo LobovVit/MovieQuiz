@@ -43,7 +43,7 @@ class QuestionFactory : QuestionFactoryProtocol {
     
     weak var delegate: QuestionFactoryDelegate?
     
-    func setup(delegate: QuestionFactoryDelegate) {
+    init(delegate: QuestionFactoryDelegate) {
             self.delegate = delegate
         }
     
