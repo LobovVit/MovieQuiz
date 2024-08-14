@@ -27,3 +27,7 @@ class AlertPresenter {
         delegate?.presentAlert(alert: alert)
     }
 }
+
+protocol AlertPresenterDelegate: AnyObject {
+    func presentAlert(alert: UIAlertController)
+}

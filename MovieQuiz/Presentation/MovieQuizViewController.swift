@@ -19,7 +19,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+        
         self.questionFactory = QuestionFactory(delegate: self)
         self.alertPresenter = AlertPresenter(delegate: self)
         
@@ -35,17 +35,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
 
         currentQuestion = question
         let viewModel = convert(model: question)
-        
-        //DispatchQueue.main.async { [weak self] in
-            self.show(quiz: viewModel)
-        //}
+        self.show(quiz: viewModel)
     }
     
     // MARK: AlertPresenterDelegate
     func presentAlert(alert: UIAlertController) {
-        DispatchQueue.main.async { [weak self] in
-            self?.present(alert, animated: true, completion: nil)
-        }
+        self.present(alert, animated: true, completion: nil)
     }
         
     // MARK: IBActions
@@ -64,7 +59,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     
-    // MARK: functions
+    // MARK: private functions
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         QuizStepViewModel(image: UIImage(named: model.image) ?? UIImage(),
                           question: model.text,
@@ -84,7 +79,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                                                     buttonText: result.buttonText,
                                                     completion: { [weak self] in
                                                                     guard let self = self else { return }
-                                                                    
+            
                                                                     currentQuestionIndex = 0
                                                                     correctAnswers = 0
                                                                     questionFactory?.requestNextQuestion()
@@ -117,7 +112,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         if currentQuestionIndex == questionsAmount - 1 {
             show(quiz: QuizResultsViewModel(title: "Этот раунд окончен!",
                                             text: correctAnswers == questionsAmount ?
-                                                "Поздравляем, вы ответили на 10 из 10!" :
+                                                "Поздравляем, вы ответили на \(questionsAmount) из \(questionsAmount)!" :
                                                 "Вы ответили на \(correctAnswers) из \(questionsAmount), попробуйте ещё раз!",
                                             buttonText: "Сыграть ещё раз"))
         } else {
