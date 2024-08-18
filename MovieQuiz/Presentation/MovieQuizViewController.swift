@@ -9,6 +9,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenter?
+    private var statisticService = StatisticService()
     
     
     @IBOutlet private weak var yesButton: UIButton!
@@ -29,13 +30,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     // MARK: QuestionFactoryDelegate
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else {
+        guard let question else {
             return
         }
 
         currentQuestion = question
-        let viewModel = convert(model: question)
-        self.show(quiz: viewModel)
+        self.show(quiz: convert(model: question))
     }
     
     // MARK: AlertPresenterDelegate
@@ -78,7 +78,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                                                     message: result.text,
                                                     buttonText: result.buttonText,
                                                     completion: { [weak self] in
-                                                                    guard let self = self else { return }
+                                                                    guard let self else { return }
             
                                                                     currentQuestionIndex = 0
                                                                     correctAnswers = 0
@@ -110,10 +110,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         yesButton.isEnabled = true
         noButton.isEnabled = true
         if currentQuestionIndex == questionsAmount - 1 {
+            statisticService.store(correct: correctAnswers, total: questionsAmount)
+            let message1 = correctAnswers == questionsAmount ?
+                "Поздравляем, вы ответили на \(questionsAmount) из \(questionsAmount)! \n" :
+                "Ваш результат: \(correctAnswers) из \(questionsAmount), попробуйте ещё раз! \n"
+            let message2 = "Количество сыгранных квизов: \(statisticService.gamesCount) \n" +
+                           "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total)(\(statisticService.bestGame.date.dateTimeString)) \n" +
+                           "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
             show(quiz: QuizResultsViewModel(title: "Этот раунд окончен!",
-                                            text: correctAnswers == questionsAmount ?
-                                                "Поздравляем, вы ответили на \(questionsAmount) из \(questionsAmount)!" :
-                                                "Вы ответили на \(correctAnswers) из \(questionsAmount), попробуйте ещё раз!",
+                                            text: message1 + message2,
                                             buttonText: "Сыграть ещё раз"))
         } else {
             currentQuestionIndex += 1
