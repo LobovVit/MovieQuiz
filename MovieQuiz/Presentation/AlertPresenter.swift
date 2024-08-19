@@ -12,8 +12,8 @@ class AlertPresenter {
     weak var delegate: AlertPresenterDelegate?
     
     init(delegate: AlertPresenterDelegate) {
-            self.delegate = delegate
-        }
+        self.delegate = delegate
+    }
     
     func showAlert(quiz result: AlertModel) {
         let alert = UIAlertController(

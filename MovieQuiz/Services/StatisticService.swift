@@ -7,26 +7,7 @@
 
 import Foundation
 
-class StatisticService: StatisticServiceProtocol {
-    
-    private enum Keys: String {
-        case correct
-        case gamesCount
-        case bestGameCorrect
-        case bestGameTotal
-        case bestGameDate
-    }
-    
-    private let storage: UserDefaults = .standard
-    
-    private var correctAnswers: Int {
-        get {
-            storage.integer(forKey: Keys.correct.rawValue)
-        }
-        set {
-            storage.set(newValue, forKey: Keys.correct.rawValue)
-        }
-    }
+class StatisticServiceImplementation: StatisticService {
     
     var gamesCount: Int {
         get {
@@ -51,7 +32,7 @@ class StatisticService: StatisticServiceProtocol {
             let total = storage.integer(forKey: Keys.bestGameTotal.rawValue)
             let date = storage.object(forKey: Keys.bestGameDate.rawValue) as? Date ?? Date()
             return GameResult(correct: correct, total: total, date: date)
-            }
+        }
         set {
             storage.set(newValue.correct, forKey: Keys.bestGameCorrect.rawValue)
             storage.set(newValue.total, forKey: Keys.bestGameTotal.rawValue)
@@ -59,10 +40,29 @@ class StatisticService: StatisticServiceProtocol {
         }
     }
     
+    private enum Keys: String {
+        case correct
+        case gamesCount
+        case bestGameCorrect
+        case bestGameTotal
+        case bestGameDate
+    }
+    
+    private let storage: UserDefaults = .standard
+    
+    private var correctAnswers: Int {
+        get {
+            storage.integer(forKey: Keys.correct.rawValue)
+        }
+        set {
+            storage.set(newValue, forKey: Keys.correct.rawValue)
+        }
+    }
+    
     func store(correct count: Int, total amount: Int) {
         correctAnswers += count
         gamesCount += 1
-        let currentGame: GameResult = GameResult(correct: count,total: amount,date: Date())
+        let currentGame = GameResult(correct: count,total: amount,date: Date())
         if currentGame.isBetterThan(bestGame) {
             bestGame = currentGame
         }
