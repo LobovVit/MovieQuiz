@@ -105,6 +105,7 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
+                        <color key="tintColor" name="YP White"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="k5M-z2-UpJ" secondAttribute="trailing" constant="20" id="29Z-cZ-bmP"/>
                             <constraint firstItem="k5M-z2-UpJ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="Nc4-Pb-BQH"/>
