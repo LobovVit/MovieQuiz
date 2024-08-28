@@ -24,11 +24,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 20
+        activityIndicator.hidesWhenStopped = true
         
-        self.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(),delegate: self)
+        self.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         self.alertPresenter = AlertPresenter(delegate: self)
         
-        //questionFactory?.requestNextQuestion()
         showLoadingIndicator()
         questionFactory?.loadData()
     }
@@ -65,13 +65,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     // MARK: private functions
     
     private func showLoadingIndicator() {
-        activityIndicator.isHidden = false
         activityIndicator.startAnimating()
     }
     
     private func hideLoadingIndicator() {
         activityIndicator.stopAnimating()
-        activityIndicator.isHidden = true
     }
     
     private func showNetworkError(message: String) {
@@ -79,12 +77,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         
         let model = AlertModel(title: "Ошибка",
                                message: message,
-                               buttonText: "Попробовать еще раз") { [weak self] in
-            guard let self = self else { return }
+                               buttonText: "Попробовать еще раз"
+        ) { [weak self] in
+            guard let self else { return }
             
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
-            
+            self.questionFactory?.loadData()
             self.questionFactory?.requestNextQuestion()
         }
         
@@ -128,8 +127,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         }
         yesButton.isEnabled = false
         noButton.isEnabled = false
+        showLoadingIndicator()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
+            self.hideLoadingIndicator()
             self.showNextQuestionOrResults()
         }
     }
