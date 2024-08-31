@@ -17,18 +17,20 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 20
+        activityIndicator.hidesWhenStopped = true
         
-        self.questionFactory = QuestionFactory(delegate: self)
+        self.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         self.alertPresenter = AlertPresenter(delegate: self)
         
-        questionFactory?.requestNextQuestion()
-        
+        showLoadingIndicator()
+        questionFactory?.loadData()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -45,6 +47,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         self.show(quiz: convert(model: question))
     }
     
+    func didLoadDataFromServer() {
+        hideLoadingIndicator()
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
+    }
+    
     // MARK: AlertPresenterDelegate
     func presentAlert(alert: UIAlertController) {
         self.present(alert, animated: true, completion: nil)
@@ -52,8 +63,35 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     
     // MARK: private functions
+    
+    private func showLoadingIndicator() {
+        activityIndicator.startAnimating()
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.stopAnimating()
+    }
+    
+    private func showNetworkError(message: String) {
+        hideLoadingIndicator()
+        
+        let model = AlertModel(title: "Ошибка",
+                               message: message,
+                               buttonText: "Попробовать еще раз"
+        ) { [weak self] in
+            guard let self else { return }
+            
+            self.currentQuestionIndex = 0
+            self.correctAnswers = 0
+            self.questionFactory?.loadData()
+            self.questionFactory?.requestNextQuestion()
+        }
+        
+        alertPresenter?.showAlert(quiz: model)
+    }
+    
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        QuizStepViewModel(image: UIImage(named: model.image) ?? UIImage(),
+        QuizStepViewModel(image: UIImage(data: model.image) ?? UIImage(),
                           question: model.text,
                           questionNumber: "\(currentQuestionIndex+1)/\(questionsAmount)")
     }
@@ -89,8 +127,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         }
         yesButton.isEnabled = false
         noButton.isEnabled = false
+        showLoadingIndicator()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
+            self.hideLoadingIndicator()
             self.showNextQuestionOrResults()
         }
     }
@@ -103,7 +143,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             let congratulationText = correctAnswers == questionsAmount ?
             "Поздравляем, вы ответили на \(questionsAmount) из \(questionsAmount)! \n" :
             "Ваш результат: \(correctAnswers) из \(questionsAmount), попробуйте ещё раз! \n"
-            let resultText = "Количество сыгранных квизов: \(statisticService.gamesCount) \n" 
+            let resultText = "Количество сыгранных квизов: \(statisticService.gamesCount) \n"
             let recordText = "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total)(\(statisticService.bestGame.date.dateTimeString)) \n"
             let accuracyText = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
             show(quiz: QuizResultsViewModel(title: "Этот раунд окончен!",
