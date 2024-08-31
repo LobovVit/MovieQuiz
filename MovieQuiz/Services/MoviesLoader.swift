@@ -22,6 +22,10 @@ struct MoviesLoader: MoviesLoading {
         static let mostPopularMoviesUrlString = "https://tv-api.com/en/API/Top250Movies/k_zcuw1ytf"
     }
     
+    enum MoviesLoaderError: Error {
+        case emptyItems(String)
+    }
+    
     private var mostPopularMoviesUrl: URL {
         // Если мы не смогли преобразовать строку в URL, то приложение упадёт с ошибкой
         guard let url = URL(string: Constants.mostPopularMoviesUrlString) else {
@@ -37,10 +41,7 @@ struct MoviesLoader: MoviesLoading {
                 do {
                     let mostPopularMovies = try JSONDecoder().decode(MostPopularMovies.self, from: data)
                     if mostPopularMovies.items.isEmpty {
-                        enum MyError: Error {
-                            case emptyItems(String)
-                        }
-                        handler(.failure(MyError.emptyItems(mostPopularMovies.errorMessage)))
+                        handler(.failure(MoviesLoaderError.emptyItems(mostPopularMovies.errorMessage)))
                     } else {
                         handler(.success(mostPopularMovies))
                     }

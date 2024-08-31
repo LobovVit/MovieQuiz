@@ -48,10 +48,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     func didLoadDataFromServer() {
-        hideLoadingIndicator() 
+        hideLoadingIndicator()
         questionFactory?.requestNextQuestion()
     }
-
+    
     func didFailToLoadData(with error: Error) {
         showNetworkError(message: error.localizedDescription)
     }
@@ -143,7 +143,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             let congratulationText = correctAnswers == questionsAmount ?
             "Поздравляем, вы ответили на \(questionsAmount) из \(questionsAmount)! \n" :
             "Ваш результат: \(correctAnswers) из \(questionsAmount), попробуйте ещё раз! \n"
-            let resultText = "Количество сыгранных квизов: \(statisticService.gamesCount) \n" 
+            let resultText = "Количество сыгранных квизов: \(statisticService.gamesCount) \n"
             let recordText = "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total)(\(statisticService.bestGame.date.dateTimeString)) \n"
             let accuracyText = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
             show(quiz: QuizResultsViewModel(title: "Этот раунд окончен!",

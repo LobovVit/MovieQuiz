@@ -36,27 +36,27 @@ class QuestionFactory : QuestionFactoryProtocol {
     }
     
     func requestNextQuestion() {
-        let index = (0..<self.movies.count).randomElement() ?? 0
-        
-        guard let movie = self.movies[safe: index] else { return }
+        guard let movie = self.movies.randomElement() else { return }
         URLSession.shared.dataTask(with: movie.resizedImageURL) { data, response, error in
-            guard let recievedData = data, error == nil  else {
+            guard let receivedData = data, error == nil  else {
                 print("Error: No Data")
                 return
             }
             let rating = Float(movie.rating) ?? 0
             
-            let qestionRating = Int.random(in: 6..<10)
-            let text = "Рейтинг этого фильма больше чем \(qestionRating)?"
-            let correctAnswer = rating > Float(qestionRating)
-            var imageData = Data()
-            imageData = recievedData
-            
-            let question = QuizQuestion(image: imageData,
+            let questionRating = Int.random(in: 5..<10)
+            var text = ""
+            var correctAnswer = true
+            if Bool.random() {
+                text = "Рейтинг этого фильма больше чем \(questionRating)?"
+                correctAnswer = rating > Float(questionRating)
+            } else {
+                text = "Рейтинг этого фильма меньше чем \(questionRating)?"
+                correctAnswer = rating < Float(questionRating)
+            }
+            let question = QuizQuestion(image: receivedData,
                                         text: text,
                                         correctAnswer: correctAnswer)
-            
-            
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 self.delegate?.didReceiveNextQuestion(question: question)
