@@ -45,8 +45,8 @@ class QuestionFactory : QuestionFactoryProtocol {
             let rating = Float(movie.rating) ?? 0
             
             let questionRating = Int.random(in: 5..<10)
-            var text = ""
-            var correctAnswer = true
+            var text: String
+            var correctAnswer: Bool
             if Bool.random() {
                 text = "Рейтинг этого фильма больше чем \(questionRating)?"
                 correctAnswer = rating > Float(questionRating)
