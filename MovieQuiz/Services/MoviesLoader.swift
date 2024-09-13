@@ -15,7 +15,11 @@ struct MoviesLoader: MoviesLoading {
     
     // MARK: - NetworkClient
     
-    private let networkClient: NetworkRouting = NetworkClient()
+    private let networkClient: NetworkRouting
+    
+    init(networkClient: NetworkRouting = NetworkClient()) {
+        self.networkClient = networkClient
+    }
     
     // MARK: - URL
     private enum Constants {
@@ -27,7 +31,6 @@ struct MoviesLoader: MoviesLoading {
     }
     
     private var mostPopularMoviesUrl: URL {
-        // Если мы не смогли преобразовать строку в URL, то приложение упадёт с ошибкой
         guard let url = URL(string: Constants.mostPopularMoviesUrlString) else {
             preconditionFailure("Unable to construct mostPopularMoviesUrl")
         }
