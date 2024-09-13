@@ -1,7 +1,8 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, AlertPresenterDelegate, MovieQuizViewControllerProtocol {
-    
+final class MovieQuizViewController: UIViewController, 
+                                     AlertPresenterDelegate,
+                                     MovieQuizViewControllerProtocol {
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent

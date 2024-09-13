@@ -7,16 +7,15 @@
 
 import UIKit
 
-class MovieQuizPresenter: QuestionFactoryDelegate {
+final class MovieQuizPresenter: QuestionFactoryDelegate {
     
-    private var currentQuestionIndex: Int = 0
-    private var correctAnswers = 0
-    private var statisticService:StatisticService = StatisticServiceImplementation()
+    private var currentQuestionIndex: Int = .zero
+    private var correctAnswers: Int = .zero
+    private var statisticService: StatisticService = StatisticServiceImplementation()
     private var questionFactory: QuestionFactoryProtocol?
     private weak var viewController: MovieQuizViewControllerProtocol?
-    
-    let questionsAmount: Int = 10
-    var currentQuestion: QuizQuestion?
+    private let questionsAmount: Int = 10
+    private var currentQuestion: QuizQuestion?
     
     init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
@@ -34,12 +33,11 @@ class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func didFailToLoadData(with error: Error) {
-        let message = error.localizedDescription
-        viewController?.showNetworkError(message: message)
+        viewController?.showNetworkError(message: error.localizedDescription)
     }
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else {
+        guard let question else {
             return
         }
         
@@ -50,7 +48,7 @@ class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
-    // MARK: - private functions
+    // MARK: - Private methods
     
     private func didAnswer(isCorrectAnswer: Bool) {
         guard let currentQuestion else {
@@ -97,13 +95,13 @@ class MovieQuizPresenter: QuestionFactoryDelegate {
         viewController?.highlightImageBorder(isCorrectAnswer:isCorrect)
         viewController?.showLoadingIndicator()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             self.viewController?.hideLoadingIndicator()
             self.showNextQuestionOrResults()
         }
     }
     
-    // MARK: - functions
+    // MARK: - Internal methods
     
     func restartGame() {
         correctAnswers = 0
@@ -120,7 +118,7 @@ class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func convert(model: QuizQuestion) -> QuizStepViewModel {
-        QuizStepViewModel(
+        .init(
             image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
